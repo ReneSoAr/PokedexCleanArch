@@ -1,8 +1,6 @@
 package com.plcoding.jetpackcomposepokedex.data.repository
 
 import com.plcoding.jetpackcomposepokedex.data.remote.PokeApi
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.PokemonList
 import com.plcoding.jetpackcomposepokedex.domain.models.PokemonListModel
 import com.plcoding.jetpackcomposepokedex.domain.models.PokemonModel
 import com.plcoding.jetpackcomposepokedex.domain.repository.PokemonRepository
