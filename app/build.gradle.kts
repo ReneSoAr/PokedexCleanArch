@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.plcoding.jetpackcomposepokedex"
+    namespace = "com.example.jetpackcomposepokedex"
     compileSdk = 34
 
     defaultConfig {
