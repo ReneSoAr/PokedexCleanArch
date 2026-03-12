@@ -10,7 +10,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.plcoding.jetpackcomposepokedex"
+        applicationId = "com.example.jetpackcomposepokedex"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.palette.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Navigation

@@ -8,36 +8,41 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.jetpackcomposepokedex.presentation.pokemonList.PokemonListScreen
 
 @Composable
 fun NavManager() {
-    val navContoller = rememberNavController()
+    val navController = rememberNavController()
 
     NavHost(
-        navContoller,
-        startDestination = "pokemon_list-Screen"
+        navController = navController,
+        startDestination = Screen.PokemonList.route
     ) {
+        composable(Screen.PokemonList.route) {
+            PokemonListScreen(navController = navController)
+        }
+
         composable(
-            route = "pokemon_list-Screen/{dominantColor}/{pokemonName}",
+            route = Screen.PokemonDetail.route,
             arguments = listOf(
-                navArgument(name = "dominantColor") {
+                navArgument("dominantColor") {
                     type = NavType.IntType
                 },
-
                 navArgument("pokemonName") {
                     type = NavType.StringType
                 }
             )
-        ) {navBackStackEntry ->
+        ) { backStackEntry ->
             val dominantColor = remember {
-                val color = navBackStackEntry.arguments?.getInt("dominantColor")
-                color?.let{ Color(it) }?: Color.White
+                val color = backStackEntry.arguments?.getInt("dominantColor")
+                color?.let { Color(it) } ?: Color.White
             }
 
-            val pokemonName = remember{
-                navBackStackEntry.arguments?.getString("pokemonName")
+            val pokemonName = remember {
+                backStackEntry.arguments?.getString("pokemonName") ?: ""
             }
 
+            // TODO: Implement PokemonDetailScreen
         }
     }
 }

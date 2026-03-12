@@ -1,5 +1,18 @@
 package com.example.jetpackcomposepokedex.domain.models
 
+import com.example.jetpackcomposepokedex.data.remote.responses.Ability
+import com.example.jetpackcomposepokedex.data.remote.responses.Cries
+import com.example.jetpackcomposepokedex.data.remote.responses.Form
+import com.example.jetpackcomposepokedex.data.remote.responses.GameIndice
+import com.example.jetpackcomposepokedex.data.remote.responses.HeldItem
+import com.example.jetpackcomposepokedex.data.remote.responses.Move
+import com.example.jetpackcomposepokedex.data.remote.responses.PastAbility
+import com.example.jetpackcomposepokedex.data.remote.responses.PastStat
+import com.example.jetpackcomposepokedex.data.remote.responses.Species
+import com.example.jetpackcomposepokedex.data.remote.responses.Sprites
+import com.example.jetpackcomposepokedex.data.remote.responses.StatXX
+import com.example.jetpackcomposepokedex.data.remote.responses.Type
+
 data class PokemonModel(
     val abilities: List<Ability>,
     val base_experience: Int,
