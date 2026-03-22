@@ -10,5 +10,5 @@ data class PokemonListModel(
     val count: Int,
     val next: String?,
     val previous: String?,
-    val results: List<PokemonResultModel>
+    val results: List<PokemonListItem>
 )

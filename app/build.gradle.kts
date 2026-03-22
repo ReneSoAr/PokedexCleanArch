@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.jetpackcomposepokedex"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.jetpackcomposepokedex"
@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.palette.ktx)
+    implementation(libs.androidx.tools.core)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Navigation

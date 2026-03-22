@@ -1,38 +1,39 @@
 package com.example.jetpackcomposepokedex.domain.models
 
-import com.example.jetpackcomposepokedex.data.remote.responses.Ability
-import com.example.jetpackcomposepokedex.data.remote.responses.Cries
-import com.example.jetpackcomposepokedex.data.remote.responses.Form
-import com.example.jetpackcomposepokedex.data.remote.responses.GameIndice
-import com.example.jetpackcomposepokedex.data.remote.responses.HeldItem
-import com.example.jetpackcomposepokedex.data.remote.responses.Move
-import com.example.jetpackcomposepokedex.data.remote.responses.PastAbility
-import com.example.jetpackcomposepokedex.data.remote.responses.PastStat
-import com.example.jetpackcomposepokedex.data.remote.responses.Species
-import com.example.jetpackcomposepokedex.data.remote.responses.Sprites
-import com.example.jetpackcomposepokedex.data.remote.responses.StatXX
-import com.example.jetpackcomposepokedex.data.remote.responses.Type
-
+/**
+ * Modelo de dominio para un Pokémon.
+ * Representa los datos necesarios para mostrar un Pokémon en la UI.
+ * Este modelo es agnóstico de la fuente de datos (API, base de datos, etc).
+ */
 data class PokemonModel(
-    val abilities: List<Ability>,
-    val base_experience: Int,
-    val cries: Cries,
-    val forms: List<Form>,
-    val game_indices: List<GameIndice>,
-    val height: Int,
-    val held_items: List<HeldItem>,
     val id: Int,
-    val is_default: Boolean,
-    val location_area_encounters: String,
-    val moves: List<Move>,
     val name: String,
-    val order: Int,
-    val past_abilities: List<PastAbility>,
-    val past_stats: List<PastStat>,
-    val past_types: List<Any?>,
-    val species: Species,
-    val sprites: Sprites,
-    val stats: List<StatXX>,
-    val types: List<Type>,
-    val weight: Int
-)
+    val height: Int,           // en decímetros
+    val weight: Int,           // en hectogramos
+    val baseExperience: Int,
+    val imageUrl: String?,     // URL de la imagen oficial
+    val types: List<PokemonType>,
+    val stats: List<PokemonStat>
+) {
+    val displayName: String get() = name.replaceFirstChar { it.uppercase() }
+    
+    val heightInMeters: Float get() = height / 10f
+    val weightInKg: Float get() = weight / 10f
+    
+    val primaryType: PokemonType get() = types.firstOrNull() ?: PokemonType.UNKNOWN
+    
+    val totalStats: Int get() = stats.sumOf { it.value }
+    
+    val maxStat: Int get() = stats.maxOfOrNull { it.value } ?: 0
+}
+
+/**
+ * Modelo simplificado para mostrar en la lista.
+ */
+data class PokemonListItem(
+    val id: Int,
+    val name: String,
+    val imageUrl: String?
+) {
+    val displayName: String get() = name.replaceFirstChar { it.uppercase() }
+}

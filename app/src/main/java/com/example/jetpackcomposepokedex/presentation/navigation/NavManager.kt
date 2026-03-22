@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.jetpackcomposepokedex.presentation.pokemonDetail.PokemonDetailScreen
 import com.example.jetpackcomposepokedex.presentation.pokemonList.PokemonListScreen
 
 @Composable
@@ -42,7 +43,11 @@ fun NavManager() {
                 backStackEntry.arguments?.getString("pokemonName") ?: ""
             }
 
-            // TODO: Implement PokemonDetailScreen
+            PokemonDetailScreen(
+                dominantColor = dominantColor,
+                pokemonName = pokemonName.lowercase(),
+                navController = navController
+            )
         }
     }
 }

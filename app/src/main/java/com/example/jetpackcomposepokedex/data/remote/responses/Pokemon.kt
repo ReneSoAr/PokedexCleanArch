@@ -19,7 +19,7 @@ data class Pokemon(
     val past_types: List<Any?>,
     val species: Species,
     val sprites: Sprites,
-    val stats: List<StatXX>,
+    val stats: List<Stat>,
     val types: List<Type>,
     val weight: Int
 )

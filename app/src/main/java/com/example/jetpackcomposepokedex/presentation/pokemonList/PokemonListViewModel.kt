@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
@@ -88,18 +86,10 @@ class PokemonListViewModel @Inject constructor(
                         endReached.value = curPage * PAGE_SIZE >= data.count
 
                         val pokedexEntries = data.results.map { entry ->
-                            // Extraer número del Pokémon de la URL
-                            // URL format: https://pokeapi.co/api/v2/pokemon/25/
-                            val number = extractPokemonNumber(entry.url)
-
-                            // Construir URL de la imagen
-                            val imageUrl =
-                                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$number.png"
-
                             PokedexListEntryUiState(
-                                pokemonName = entry.name.capitalize(Locale.current),
-                                imageUrl = imageUrl,
-                                number = number
+                                pokemonName = entry.displayName,
+                                imageUrl = entry.imageUrl ?: "",
+                                number = entry.id
                             )
                         }
 
@@ -118,22 +108,6 @@ class PokemonListViewModel @Inject constructor(
                     // Estado de carga ya establecido arriba
                 }
             }
-        }
-    }
-
-    /**
-     * Extrae el número del Pokémon de la URL.
-     * 
-     * Ejemplo: 
-     * - Input: "https://pokeapi.co/api/v2/pokemon/25/"
-     * - Output: 25
-     */
-    private fun extractPokemonNumber(url: String): Int {
-        return try {
-            val cleanUrl = if (url.endsWith("/")) url.dropLast(1) else url
-            cleanUrl.takeLastWhile { it.isDigit() }.toInt()
-        } catch (e: NumberFormatException) {
-            0  // Fallback si no se puede parsear
         }
     }
 
