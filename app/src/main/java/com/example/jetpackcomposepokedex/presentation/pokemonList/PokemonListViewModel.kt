@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
-import com.example.jetpackcomposepokedex.domain.repository.PokemonRepository
+import com.example.jetpackcomposepokedex.domain.usecases.GetPokemonListUseCase
 import com.example.jetpackcomposepokedex.utils.Constants.PAGE_SIZE
 import com.example.jetpackcomposepokedex.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 /**
  * ViewModel para la lista de Pokémon.
- * 
+ *
  * Maneja:
  * - Carga paginada de Pokémon desde la API
  * - Estado de carga y errores
@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    private val repository: PokemonRepository
+    private val getPokemonListUseCase: GetPokemonListUseCase
 ) : ViewModel() {
 
     private var curPage = 0
@@ -78,7 +78,7 @@ class PokemonListViewModel @Inject constructor(
             isLoading.value = true
             loadError.value = ""
 
-            val result = repository.getPokemonList(PAGE_SIZE, curPage * PAGE_SIZE)
+            val result = getPokemonListUseCase(PAGE_SIZE, curPage * PAGE_SIZE)
 
             when (result) {
                 is Resource.Success -> {

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcomposepokedex.domain.models.PokemonModel
-import com.example.jetpackcomposepokedex.domain.repository.PokemonRepository
+import com.example.jetpackcomposepokedex.domain.usecases.GetPokemonDetailUseCase
 import com.example.jetpackcomposepokedex.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ sealed class PokemonDetailState {
 
 @HiltViewModel
 class PokemonDetailViewModel @Inject constructor(
-    private val pokemonRepository: PokemonRepository,
+    private val getPokemonDetailUseCase: GetPokemonDetailUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class PokemonDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = PokemonDetailState.Loading
             
-            when (val result = pokemonRepository.getPokemonInfo(pokemonName)) {
+            when (val result = getPokemonDetailUseCase(pokemonName)) {
                 is Resource.Success -> {
                     result.data?.let { 
                         _state.value = PokemonDetailState.Success(it)
