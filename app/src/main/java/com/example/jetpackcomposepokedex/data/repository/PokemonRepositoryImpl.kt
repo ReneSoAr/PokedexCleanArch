@@ -6,6 +6,7 @@ import com.example.jetpackcomposepokedex.data.remote.mapper.PokemonMapper
 import com.example.jetpackcomposepokedex.domain.error.DomainError
 import com.example.jetpackcomposepokedex.domain.model.Pokemon
 import com.example.jetpackcomposepokedex.domain.model.PokemonList
+import com.example.jetpackcomposepokedex.domain.model.PokemonListItem
 import com.example.jetpackcomposepokedex.domain.repository.PokemonRepository
 import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
@@ -55,5 +56,37 @@ class PokemonRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(DomainError.Unknown("Unknown error: ${e.message}"))
         }
+    }
+
+    override suspend fun searchPokemonByName(query: String): Result<List<PokemonListItem>> {
+        return try {
+            val allPokemon = pokeApi.getPokemonList(limit = 10000, offset = 0)
+            val normalizedQuery = query.trim().lowercase()
+            
+            val filtered = allPokemon.results
+                .filter { it.name.contains(normalizedQuery, ignoreCase = true) }
+                .map { result ->
+                    val id = extractIdFromUrl(result.url)
+                    PokemonListItem(
+                        id = id,
+                        name = result.name,
+                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
+                    )
+                }
+            
+            Result.success(filtered)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IOException) {
+            Result.failure(DomainError.NetworkError("Network error. Please check your internet connection."))
+        } catch (e: HttpException) {
+            Result.failure(DomainError.NetworkError("Server error: ${e.code()}"))
+        } catch (e: Exception) {
+            Result.failure(DomainError.Unknown("Unknown error: ${e.message}"))
+        }
+    }
+
+    private fun extractIdFromUrl(url: String): Int {
+        return url.trimEnd('/').split("/").last().toIntOrNull() ?: 0
     }
 }

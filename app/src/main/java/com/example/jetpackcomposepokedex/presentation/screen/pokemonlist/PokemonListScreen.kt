@@ -63,7 +63,8 @@ fun PokemonListScreen(
     viewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var searchQuery by remember { mutableStateOf("") }
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val filteredList by viewModel.filteredPokemon.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -89,13 +90,14 @@ fun PokemonListScreen(
                 .padding(paddingValues)
         ) {
             SearchBar(
+                query = searchQuery,
                 hint = "Buscar Pokémon...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp),
                 onSearch = { query ->
-                    searchQuery = query
+                    viewModel.onSearchQueryChanged(query)
                 }
             )
 
@@ -115,14 +117,6 @@ fun PokemonListScreen(
                     )
                 }
                 is PokemonListUiState.Success -> {
-                    val filteredList = if (searchQuery.isEmpty()) {
-                        state.pokemon
-                    } else {
-                        state.pokemon.filter {
-                            it.name.contains(searchQuery, ignoreCase = true)
-                        }
-                    }
-
                     if (filteredList.isEmpty()) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -316,16 +310,14 @@ private fun ErrorState(
 
 @Composable
 private fun SearchBar(
+    query: String,
     modifier: Modifier = Modifier,
     hint: String = "Buscar...",
     onSearch: (String) -> Unit = {}
 ) {
-    var text by remember { mutableStateOf("") }
-
     TextField(
-        value = text,
+        value = query,
         onValueChange = {
-            text = it
             onSearch(it)
         },
         placeholder = { Text(hint) },
