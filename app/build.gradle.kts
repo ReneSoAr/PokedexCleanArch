@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -42,10 +44,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -82,9 +80,12 @@ dependencies {
 
     // Retrofit
     implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
+    implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Image Loading - Coil oficial
     implementation(libs.coil.compose)

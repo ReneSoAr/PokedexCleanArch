@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jetpackcomposepokedex.presentation.pokemonDetail.PokemonDetailScreen
-import com.example.jetpackcomposepokedex.presentation.pokemonList.PokemonListScreen
+import com.example.jetpackcomposepokedex.presentation.screen.pokemondetail.PokemonDetailScreen
+import com.example.jetpackcomposepokedex.presentation.screen.pokemonlist.PokemonListScreen
 
 @Composable
 fun NavManager() {
