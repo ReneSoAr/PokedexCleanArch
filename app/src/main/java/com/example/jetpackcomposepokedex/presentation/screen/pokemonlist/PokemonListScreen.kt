@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,7 +74,8 @@ fun PokemonListScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 16.dp),
+                    .statusBarsPadding()
+                    .padding(top = 8.dp, bottom = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -82,12 +86,14 @@ fun PokemonListScreen(
                         .padding(horizontal = 16.dp)
                 )
             }
-        }
+        },
+        containerColor = Color.Red
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+
         ) {
             SearchBar(
                 query = searchQuery,
@@ -157,14 +163,25 @@ private fun PokemonList(
     onLoadMore: () -> Unit,
     onPokemonClick: (PokemonListItemUi) -> Unit
 ) {
+    val listState = rememberLazyListState()
+    val itemsCount = (pokemonList.size + 1) / 2
+
     LazyColumn(
+        state = listState,
         contentPadding = PaddingValues(16.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        val itemsCount = (pokemonList.size + 1) / 2
+        items(itemsCount, key = { it }) { index ->
+            // Detectar el último elemento visible para cargar más
+            val isLastVisible by remember {
+                derivedStateOf {
+                    val layoutInfo = listState.layoutInfo
+                    val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+                    lastVisibleItem?.index == index
+                }
+            }
 
-        items(itemsCount) { index ->
-            if (index >= itemsCount - 1 && !endReached && !isLoadingMore) {
+            if (isLastVisible && index >= itemsCount - 2 && !isLoadingMore && !endReached) {
                 onLoadMore()
             }
 

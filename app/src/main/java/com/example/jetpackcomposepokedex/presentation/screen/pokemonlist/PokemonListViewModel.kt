@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -64,18 +65,20 @@ class PokemonListViewModel @Inject constructor(
         _searchQuery
             .debounce(300)
             .flatMapLatest { query ->
-                flow {
-                    if (query.isEmpty()) {
-                        _isSearchActive.value = false
-                        val currentState = _uiState.value
-                        if (currentState is PokemonListUiState.Success) {
-                            emit(currentState.pokemon)
+                if (query.isEmpty()) {
+                    _isSearchActive.value = false
+                    // Observar cambios en _uiState para mantener la lista sincronizada
+                    _uiState.map { state ->
+                        if (state is PokemonListUiState.Success) {
+                            state.pokemon
                         } else {
-                            emit(emptyList())
+                            emptyList()
                         }
-                    } else {
-                        _isSearchActive.value = true
-                        _isSearching.value = true
+                    }
+                } else {
+                    _isSearchActive.value = true
+                    _isSearching.value = true
+                    flow {
                         val result = pokemonRepository.searchPokemonByName(query)
                         result.fold(
                             onSuccess = { pokemonList ->

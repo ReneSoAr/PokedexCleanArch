@@ -13,3 +13,5 @@ sealed class DomainError(override val message: String) : Throwable(message) {
     
     data class Unknown(val errorMessage: String) : DomainError(errorMessage)
 }
+
+
